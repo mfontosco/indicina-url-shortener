@@ -1,11 +1,13 @@
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Home from "./pages/Home";
 
-
-function App() {
+export default function App() {
   return (
-    <div className="flex justify-center py-4">
-      <h1 className="text-2xl ">Welcome to my url shortener application</h1>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+      </Routes>
+    </Router>
   );
 }
-
-export default App;
