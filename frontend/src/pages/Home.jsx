@@ -1,15 +1,19 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 export default function Home() {
   const [longUrl, setLongUrl] = useState("");
   const [shortUrl, setShortUrl] = useState("");
-
+  const [shortId,setShortUrlId] = useState("")
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const { data } = await axios.post("http://localhost:3001/api/encode", { longUrl });
       setShortUrl(data.shortUrl);
+
+      const id = new URL(data.shortUrl).pathname.replace("/", "");
+      setShortUrlId(id);
     } catch (error) {
       console.error(error);
       alert("Failed to shorten URL");
@@ -39,14 +43,14 @@ export default function Home() {
         {shortUrl && (
           <div className="mt-4 text-center">
             <p className="text-gray-700">Shortened URL:</p>
-            <a
-              href={shortUrl}
+            <Link
+              to={`/${shortId}`}
               target="_blank"
               rel="noopener noreferrer"
               className="text-blue-600 hover:underline"
             >
               {shortUrl}
-            </a>
+            </Link>
           </div>
         )}
       </div>
