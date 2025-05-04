@@ -4,7 +4,14 @@ const urlDatabase = {};
 
 
 
-const encodeUrl =(longUrl)=> {
+const encodeUrl = (longUrl) => {
+  
+  for (const key in urlDatabase) {
+    if (urlDatabase[key].longUrl === longUrl) {
+      return urlDatabase[key]; 
+    }
+  }
+
   const shortCode = generateShortId();
   const shortUrl = `http://short.est/${shortCode}`;
 
@@ -16,7 +23,8 @@ const encodeUrl =(longUrl)=> {
   };
 
   return urlDatabase[shortCode];
-}
+};
+
 
 const decodeUrl = (shortCode) =>{
   return urlDatabase[shortCode] || null;
