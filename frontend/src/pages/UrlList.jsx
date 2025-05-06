@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import baseurl from '../api/baseurl'
+import  {baseurl} from '../api/baseurl'
 export default function UrlList() {
   const [urls, setUrls] = useState([]);
   const [query, setQuery] = useState("");

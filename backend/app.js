@@ -5,10 +5,11 @@ const path = require('path');
 const urlRoutes = require('./routes/urlRoutes');
 const { redirectToLongUrl } = require('./controllers/urlController');
 const logger = require('./logger');
+const cors = require("cors")
 
 const app = express();
 app.use(express.json());
-
+app.use(cors("*"))
 
 app.use(
   morgan('combined', {

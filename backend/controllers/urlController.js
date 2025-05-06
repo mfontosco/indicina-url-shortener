@@ -7,6 +7,7 @@ const {
   incrementVisits,
   searchUrls,
 } = require('../services/urlService');
+const StatusCodes = require('http-status-codes');
 
 exports.encode = (req, res) => {
   const { longUrl } = req.body;
@@ -14,12 +15,12 @@ exports.encode = (req, res) => {
 
   if (!longUrl) {
     logger.warn('Missing longUrl in request body');
-    return res.status(400).json({ error: 'longUrl is required' });
+    return res.status(StatusCodes.CREATED).json({ error: 'longUrl is required' });
   }
 
   const result = encodeUrl(longUrl);
   logger.info(`Generated short URL: ${result.shortUrl}`);
-  res.status(201).json(result);
+  res.status(StatusCodes.CREATED).json(result);
 };
 
 exports.decode = (req, res) => {
@@ -30,11 +31,11 @@ exports.decode = (req, res) => {
   const result = decodeUrl(shortCode);
   if (!result) {
     logger.warn(`Short URL not found: ${shortUrl}`);
-    return res.status(404).json({ error: 'Short URL not found' });
+    return res.status(StatusCodes.NOT_FOUND).json({ error: 'Short URL not found' });
   }
 
   logger.info(`Decoded to long URL: ${result.longUrl}`);
-  res.json({ longUrl: result.longUrl });
+  res.status(StatusCodes.OK).json({ longUrl: result.longUrl });
 };
 
 exports.statistic = (req, res) => {
@@ -44,7 +45,7 @@ exports.statistic = (req, res) => {
   const stats = getStats(url_path);
   if (!stats) {
     logger.warn(`Stats not found for: ${url_path}`);
-    return res.status(404).json({ error: 'URL not found' });
+    return res.status(StatusCodes.NOT_FOUND).json({ error: 'URL not found' });
   }
 
   res.json(stats);
@@ -57,7 +58,7 @@ exports.list = (req, res) => {
     : 'Listing all URLs');
 
   const result = search && search.length >= 3 ? searchUrls(search) : listAllUrls();
-  res.json(result);
+  res.status(StatusCodes.OK).json(result);
 };
 
 exports.redirectToLongUrl = (req, res) => {
@@ -67,7 +68,7 @@ exports.redirectToLongUrl = (req, res) => {
   const data = decodeUrl(url_path);
   if (!data) {
     logger.warn(`Redirect failed, short URL not found: ${url_path}`);
-    return res.status(404).send('URL not found');
+    return res.status(StatusCodes.OK).send('URL not found');
   }
 
   incrementVisits(url_path);
