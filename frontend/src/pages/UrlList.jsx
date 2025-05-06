@@ -4,51 +4,96 @@ import axios from "axios";
 export default function UrlList() {
   const [urls, setUrls] = useState([]);
   const [query, setQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const urlsPerPage = 5;
 
   useEffect(() => {
     axios.get("http://localhost:3001/api/list").then((res) => setUrls(res.data));
   }, []);
 
   const filteredUrls =
-  query.length >= 3
-    ? urls.filter((url) =>
-        url.longUrl.toLowerCase().includes(query.toLowerCase())
-      )
-    : urls;
+    query.length >= 3
+      ? urls.filter((url) =>
+          url.longUrl.toLowerCase().includes(query.toLowerCase())
+        )
+      : urls;
+
+  const indexOfLast = currentPage * urlsPerPage;
+  const indexOfFirst = indexOfLast - urlsPerPage;
+  const currentUrls = filteredUrls.slice(indexOfFirst, indexOfLast);
+  const totalPages = Math.ceil(filteredUrls.length / urlsPerPage);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-6xl mx-auto">
         <h1 className="text-2xl font-bold mb-6">All Shortened URLs</h1>
+
         <input
           type="text"
           placeholder="Search by long URL..."
           className="mb-4 p-2 border rounded w-full"
           value={query}
-          onChange={(e) => setQuery(e.target.value)}
+          onChange={(e) => {
+            setQuery(e.target.value);
+            setCurrentPage(1); // Reset to first page on new search
+          }}
         />
-        <div className="space-y-4">
-          {filteredUrls.map((url) => (
-            <div
-              key={url.id}
-              className="p-4 bg-white rounded shadow border flex justify-between items-center"
+
+        <div className="overflow-x-auto">
+          <table className="w-full bg-white shadow rounded">
+            <thead className="bg-gray-100 text-left text-sm font-semibold">
+              <tr>
+                <th className="p-3">Created At</th>
+                <th className="p-3">Long URL</th>
+                <th className="p-3">Short URL</th>
+                <th className="p-3 text-right">Visits</th>
+              </tr>
+            </thead>
+            <tbody>
+              {currentUrls.map((url) => (
+                <tr key={url.id} className="border-t">
+                  <td className="p-3">{new Date(url.createdAt).toLocaleString()}</td>
+                  <td className="p-3 break-all">{url.longUrl}</td>
+                  <td className="p-3">
+                    <a
+                      href={url.shortUrl}
+                      className="text-blue-600 hover:underline"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {url.shortUrl}
+                    </a>
+                  </td>
+                  <td className="p-3 text-right">{url.visits}</td>
+                </tr>
+              ))}
+              {currentUrls.length === 0 && (
+                <tr>
+                  <td colSpan="4" className="p-3 text-center text-gray-500">
+                    No results found.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Pagination */}
+        <div className="flex justify-center mt-4 space-x-2">
+          {Array.from({ length: totalPages }, (_, i) => (
+            <button
+              key={i + 1}
+              onClick={() => handlePageChange(i + 1)}
+              className={`px-4 py-1 rounded ${
+                currentPage === i + 1 ? "bg-blue-600 text-white" : "bg-white border"
+              }`}
             >
-              <div>
-                <p className="text-sm text-gray-500">{new Date(url.createdAt).toLocaleString()}</p>
-                <p className="font-medium text-gray-800">{url.longUrl}</p>
-                <a
-                  href={url.shortUrl}
-                  className="text-blue-600 hover:underline text-sm"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {url.shortUrl}
-                </a>
-              </div>
-              <div className="text-right">
-                <p className="text-sm text-gray-600">Visits: {url.visits}</p>
-              </div>
-            </div>
+              {i + 1}
+            </button>
           ))}
         </div>
       </div>

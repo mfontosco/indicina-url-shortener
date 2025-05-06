@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
-
+import IndicinaLogo from '../assets/indicina.png'
+import { toast } from 'react-toastify';
+import { baseurl } from "../api/baseurl";
 export default function Home() {
   const [longUrl, setLongUrl] = useState("");
   const [shortUrl, setShortUrl] = useState("");
@@ -9,19 +11,30 @@ export default function Home() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const { data } = await axios.post("http://localhost:3001/api/encode", { longUrl });
+      const { data } = await axios.post(`${baseurl}/encode`, { longUrl });
       setShortUrl(data.shortUrl);
 
       const id = new URL(data.shortUrl).pathname.replace("/", "");
       setShortUrlId(id);
+      toast.success("URL shortened successfully!");
     } catch (error) {
       console.error(error);
-      alert("Failed to shorten URL");
+      toast.error("Failed to shorten URL");
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
+    <div className="min-h-screen  "> 
+   <div className="h-[10%] w-40 flex items-center justify-center overflow-hidden
+   p-4">
+  <img
+    src={IndicinaLogo}
+    alt="indicina-logo"
+    className="h-full w-auto object-contain"
+  />
+</div>
+    <div className="flex-1 bg-gray-50 flex   items-center justify-center  p-4">
+
       <div className="bg-white p-8 rounded-xl shadow-md w-full max-w-md">
         <h1 className="text-2xl font-bold mb-4 text-center">ShortLink</h1>
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -54,6 +67,7 @@ export default function Home() {
           </div>
         )}
       </div>
+    </div>
     </div>
   );
 }

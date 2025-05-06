@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import { baseurl } from "../api/baseurl";
 
 export default function RedirectPage() {
   const { shortId } = useParams();
@@ -8,7 +9,7 @@ export default function RedirectPage() {
   useEffect(() => {
     const redirectToLongUrl = async () => {
       try {
-        const response = await axios.post("http://localhost:3001/api/decode", {
+        const response = await axios.post(`${baseurl}/decode`, {
           shortUrl: `http://short.est/${shortId}`,
         });
         window.location.href = response.data.longUrl;
