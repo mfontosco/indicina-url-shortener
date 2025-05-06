@@ -1,0 +1,14 @@
+2025-05-06 16:43:51 [INFO]: Listing all URLs
+2025-05-06 16:43:51 [INFO]: ::1 - - [06/May/2025:15:43:51 +0000] "GET /api/list HTTP/1.1" 200 2 "-" "PostmanRuntime/7.43.4"
+2025-05-06 17:01:52 [INFO]: Encoding URL: https://indicina.co
+2025-05-06 17:01:52 [INFO]: Generated short URL: http://short.est/7RFlzw
+2025-05-06 17:01:52 [INFO]: ::ffff:127.0.0.1 - - [06/May/2025:16:01:52 +0000] "POST /api/encode HTTP/1.1" 201 120 "-" "-"
+2025-05-06 17:01:52 [INFO]: Decoding short URL: http://short.est/7RFlzw
+2025-05-06 17:01:52 [INFO]: Decoded to long URL: https://indicina.co
+2025-05-06 17:01:52 [INFO]: ::ffff:127.0.0.1 - - [06/May/2025:16:01:52 +0000] "POST /api/decode HTTP/1.1" 200 33 "-" "-"
+2025-05-06 17:01:52 [INFO]: Encoding URL: undefined
+2025-05-06 17:01:52 [WARN]: Missing longUrl in request body
+2025-05-06 17:01:52 [INFO]: ::ffff:127.0.0.1 - - [06/May/2025:16:01:52 +0000] "POST /api/encode HTTP/1.1" 400 31 "-" "-"
+2025-05-06 17:01:52 [INFO]: Decoding short URL: http://short.est/invalidcode
+2025-05-06 17:01:52 [WARN]: Short URL not found: http://short.est/invalidcode
+2025-05-06 17:01:52 [INFO]: ::ffff:127.0.0.1 - - [06/May/2025:16:01:52 +0000] "POST /api/decode HTTP/1.1" 404 31 "-" "-"

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-
+import baseurl from '../api/baseurl'
 export default function UrlList() {
   const [urls, setUrls] = useState([]);
   const [query, setQuery] = useState("");
@@ -8,7 +8,7 @@ export default function UrlList() {
   const urlsPerPage = 5;
 
   useEffect(() => {
-    axios.get("http://localhost:3001/api/list").then((res) => setUrls(res.data));
+    axios.get(`${baseurl}/list`).then((res) => setUrls(res.data));
   }, []);
 
   const filteredUrls =
@@ -39,7 +39,7 @@ export default function UrlList() {
           value={query}
           onChange={(e) => {
             setQuery(e.target.value);
-            setCurrentPage(1); // Reset to first page on new search
+            setCurrentPage(1);
           }}
         />
 
@@ -82,7 +82,6 @@ export default function UrlList() {
           </table>
         </div>
 
-        {/* Pagination */}
         <div className="flex justify-center mt-4 space-x-2">
           {Array.from({ length: totalPages }, (_, i) => (
             <button
